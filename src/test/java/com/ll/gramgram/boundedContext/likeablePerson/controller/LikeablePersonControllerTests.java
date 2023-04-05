@@ -190,4 +190,42 @@ public class LikeablePersonControllerTests {
                         <span class="toInstaMember_attractiveTypeDisplayName">성격</span>
                         """.stripIndent().trim()))));
     }
+
+    @Test
+    @DisplayName("호감 삭제 실패")
+    @WithUserDetails("user3")
+    void t007() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(get("/likeablePerson/delete/10")) // 없는 호감
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(status().is3xxRedirection());
+
+        ResultActions resultActions2 = mvc
+                .perform(get("/likeablePerson/list"))
+                .andDo(print());
+
+        // THEN
+        resultActions2
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("showList"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().string(containsString("""
+                        <span class="toInstaMember_username">insta_user4</span>
+                        """.stripIndent().trim())))
+                .andExpect(content().string(containsString("""
+                        <span class="toInstaMember_attractiveTypeDisplayName">외모</span>
+                        """.stripIndent().trim())))
+                .andExpect(content().string((containsString("""
+                        <span class="toInstaMember_username">insta_user100</span>
+                        """.stripIndent().trim()))))
+                .andExpect(content().string((containsString("""
+                        <span class="toInstaMember_attractiveTypeDisplayName">성격</span>
+                        """.stripIndent().trim()))));
+    }
 }

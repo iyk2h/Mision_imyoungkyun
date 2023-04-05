@@ -62,6 +62,6 @@ public class LikeablePersonService {
 
             return RsData.of("S-1", "호감 상대인 인스타유저(%s)를 삭제되었습니다.".formatted(lp.get().getUsername()), null);
         }
-        return RsData.of("F-1", "호감 상대를 삭제할 수 없습니다.".formatted(lp.get().getUsername()), null);
+        return RsData.of("F-1", "호감 상대를 삭제할 수 없습니다.", null);
     }
 }
