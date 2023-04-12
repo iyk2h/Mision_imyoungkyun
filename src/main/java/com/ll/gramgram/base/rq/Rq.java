@@ -7,13 +7,12 @@ import com.ll.gramgram.standard.util.Ut;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Date;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
-
-import java.util.Date;
 
 @Component
 @RequestScope
@@ -69,6 +68,8 @@ public class Rq {
         String key = "historyBackErrorMsg___" + referer;
         req.setAttribute("localStorageKeyAboutHistoryBackErrorMsg", key);
         req.setAttribute("historyBackErrorMsg", msg);
+        // 200 이 아니라 400 으로 응답코드가 지정되도록
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return "common/js";
     }
 

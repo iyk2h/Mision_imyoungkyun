@@ -1,19 +1,28 @@
 package com.ll.gramgram.boundedContext.member.entity;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Builder // Member.builder().providerTypeCode(providerTypeCode) .. 이런식으로 쓸 수 있게 해주는
 @NoArgsConstructor // @Builder 붙이면 이거 필수

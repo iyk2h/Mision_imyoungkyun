@@ -5,11 +5,10 @@ import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.repository.InstaMemberRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import com.ll.gramgram.boundedContext.member.service.MemberService;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -82,9 +81,5 @@ public class InstaMemberService {
 
         // 생성
         return create(username, gender);
-    }
-
-    public Optional<InstaMember> findById(Long id) {
-        return instaMemberRepository.findById(id);
     }
 }
