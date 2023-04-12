@@ -217,4 +217,74 @@ public class LikeablePersonControllerTests {
 
         assertThat(likeablePersonService.findById(1L).isPresent()).isEqualTo(true);
     }
+
+    @Test
+    @DisplayName("중복 등록 (user3가 user4에게 호감표시(외모))")
+    @WithUserDetails("user3")
+    void t009() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", "insta_user4")
+                        .param("attractiveTypeCode", "1")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("중복 등록 (user3가 user4에게 호감표시(외모 -> 능력))")
+    @WithUserDetails("user3")
+    void t010() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", "insta_user4")
+                        .param("attractiveTypeCode", "2")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    @DisplayName("호감 등록 초과 (11개))")
+    @WithUserDetails("user4")
+    void t011() throws Exception {
+        // WHEN
+
+        ResultActions[] arr = new ResultActions[11];
+
+        for (int i = 0; i < 11; i++) {
+            arr[i] = mvc
+                    .perform(post("/likeablePerson/add")
+                            .with(csrf()) // CSRF 키 생성
+                            .param("username", "insta_user" + i)
+                            .param("attractiveTypeCode", "1")
+                    );
+        }
+
+        // THEN 10번
+        arr[9]
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is3xxRedirection());
+        // THEN 11번
+        arr[10]
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is4xxClientError())
+        ;
+    }
 }
