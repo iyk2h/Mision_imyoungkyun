@@ -6,6 +6,7 @@ import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,5 +48,20 @@ public class LikeablePersonService {
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
+    }
+
+    @Transactional
+    public RsData<LikeablePerson> delete(Member member, Long id) {
+        if ( member.hasConnectedInstaMember() == false ) {
+            return RsData.of("F-2", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
+        }
+
+        Optional<InstaMember> lp = instaMemberService.findById(id);
+        if (lp.isPresent()) {
+            likeablePersonRepository.deleteById(id);
+
+            return RsData.of("S-1", "호감 상대인 인스타유저(%s)를 삭제되었습니다.".formatted(lp.get().getUsername()), null);
+        }
+        return RsData.of("F-1", "호감 상대를 삭제할 수 없습니다.", null);
     }
 }

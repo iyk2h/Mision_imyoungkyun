@@ -83,4 +83,8 @@ public class InstaMemberService {
         // 생성
         return create(username, gender);
     }
+
+    public Optional<InstaMember> findById(Long id) {
+        return instaMemberRepository.findById(id);
+    }
 }
