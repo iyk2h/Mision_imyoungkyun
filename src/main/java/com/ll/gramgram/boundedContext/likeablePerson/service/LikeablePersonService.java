@@ -32,7 +32,29 @@ public class LikeablePersonService {
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
-        LikeablePerson likeablePerson = LikeablePerson
+        LikeablePerson likeablePerson = likeablePersonRepository.findByFromToTo(fromInstaMember.getId(), toInstaMember.getId());
+
+        if (likeablePerson != null) {
+            if (likeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
+                return RsData.of("F-1", "한명의 인스타회원이 다른 인스타회원에게 중복으로 호감표시를 할 수 없습니다.");
+            } else {
+                String before = likeablePerson.getAttractiveTypeDisplayName();
+
+                likeablePerson.setAttractiveTypeCode(attractiveTypeCode);
+                likeablePersonRepository.save(likeablePerson);
+
+                String after = likeablePerson.getAttractiveTypeDisplayName();
+
+                System.out.println("!@#");
+                System.out.println(before + ", " + after);
+
+                return RsData.of("S-1",
+                        "%s에 대한 호감사유를 %s에서 %s으로 변경합니다.".formatted(username, before, after),
+                        likeablePerson);
+            }
+        }
+
+        likeablePerson = LikeablePerson
                 .builder()
                 .fromInstaMember(fromInstaMember) // 호감을 표시하는 사람의 인스타 멤버
                 .fromInstaMemberUsername(member.getInstaMember().getUsername()) // 중요하지 않음
