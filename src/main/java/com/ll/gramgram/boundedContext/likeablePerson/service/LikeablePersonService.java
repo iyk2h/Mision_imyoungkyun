@@ -43,18 +43,17 @@ public class LikeablePersonService {
         if (likeablePerson != null) {
             if (likeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
                 return RsData.of("F-1", "한명의 인스타회원이 다른 인스타회원에게 중복으로 호감표시를 할 수 없습니다.");
-            } else {
-                String before = likeablePerson.getAttractiveTypeDisplayName();
-
-                likeablePerson.setAttractiveTypeCode(attractiveTypeCode);
-                likeablePersonRepository.save(likeablePerson);
-
-                String after = likeablePerson.getAttractiveTypeDisplayName();
-
-                return RsData.of("S-1",
-                        "%s에 대한 호감사유를 %s에서 %s으로 변경합니다.".formatted(username, before, after),
-                        likeablePerson);
             }
+            String before = likeablePerson.getAttractiveTypeDisplayName();
+
+            likeablePerson.setAttractiveTypeCode(attractiveTypeCode);
+            likeablePersonRepository.save(likeablePerson);
+
+            String after = likeablePerson.getAttractiveTypeDisplayName();
+
+            return RsData.of("S-1",
+                    "%s에 대한 호감사유를 %s에서 %s으로 변경합니다.".formatted(username, before, after),
+                    likeablePerson);
         }
 
         likeablePerson = LikeablePerson
