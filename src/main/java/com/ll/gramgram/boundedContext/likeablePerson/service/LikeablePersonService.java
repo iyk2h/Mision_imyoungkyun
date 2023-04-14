@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.likeablePerson.service;
 
+import com.ll.gramgram.base.appCongig.AppConfig;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
@@ -30,10 +31,6 @@ public class LikeablePersonService {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
         }
 
-        if (likeablePersonRepository.findByFromInstaMemberId(member.getId()).size() >= 10) {
-            return RsData.of("F-1", "한명의 인스타회원이 11명 이상의 호감상대를 등록 할 수 없습니다.");
-        }
-
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
@@ -54,6 +51,14 @@ public class LikeablePersonService {
             return RsData.of("S-1",
                     "%s에 대한 호감사유를 %s에서 %s으로 변경합니다.".formatted(username, before, after),
                     likeablePerson);
+        }
+
+        long likeablePersonFromMax = AppConfig.getLikeablePersonFromMax();
+
+
+
+        if (likeablePersonRepository.findByFromInstaMemberId(member.getId()).size() >= likeablePersonFromMax) {
+            return RsData.of("F-1", "한명의 인스타회원이 11명 이상의 호감상대를 등록 할 수 없습니다.");
         }
 
         likeablePerson = LikeablePerson

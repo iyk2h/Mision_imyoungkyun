@@ -264,9 +264,9 @@ public class LikeablePersonControllerTests {
     void t011() throws Exception {
         // WHEN
 
-        ResultActions[] arr = new ResultActions[11];
+        ResultActions[] arr = new ResultActions[12];
 
-        for (int i = 0; i < 11; i++) {
+        for (int i = 1; i <= 11; i++) {
             arr[i] = mvc
                     .perform(post("/likeablePerson/add")
                             .with(csrf()) // CSRF 키 생성
@@ -276,12 +276,12 @@ public class LikeablePersonControllerTests {
         }
 
         // THEN 10번
-        arr[9]
+        arr[10]
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("add"))
                 .andExpect(status().is3xxRedirection());
         // THEN 11번
-        arr[10]
+        arr[11]
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("add"))
                 .andExpect(status().is4xxClientError())
