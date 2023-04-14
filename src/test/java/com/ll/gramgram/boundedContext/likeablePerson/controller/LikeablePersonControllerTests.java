@@ -239,7 +239,7 @@ public class LikeablePersonControllerTests {
     }
 
     @Test
-    @DisplayName("중복 등록 (user3가 user4에게 호감표시(외모 -> 능력))")
+    @DisplayName("중복 등록 (user3가 user4에게 호감표시(외모 -> 성격))")
     @WithUserDetails("user3")
     void t010() throws Exception {
         // WHEN
