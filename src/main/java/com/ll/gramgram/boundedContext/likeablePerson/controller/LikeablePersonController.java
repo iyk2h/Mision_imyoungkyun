@@ -44,11 +44,6 @@ public class LikeablePersonController {
     public String add(@Valid AddForm addForm) {
         RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
 
-        if (rq.getMember().getInstaMember().getFromLikeablePeople().size() > 10){
-            createRsData.setMsg("한명의 인스타회원이 11명 이상의 호감상대를 등록 할 수 없습니다.");
-            return rq.historyBack(createRsData);
-        }
-
         if (createRsData.isFail()) {
             return rq.historyBack(createRsData);
         }
