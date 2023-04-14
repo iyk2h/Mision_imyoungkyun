@@ -55,9 +55,7 @@ public class LikeablePersonService {
 
         long likeablePersonFromMax = AppConfig.getLikeablePersonFromMax();
 
-
-
-        if (likeablePersonRepository.findByFromInstaMemberId(member.getId()).size() >= likeablePersonFromMax) {
+        if (fromInstaMember.getFromLikeablePeople().size() >= likeablePersonFromMax) {
             return RsData.of("F-1", "한명의 인스타회원이 11명 이상의 호감상대를 등록 할 수 없습니다.");
         }
 
