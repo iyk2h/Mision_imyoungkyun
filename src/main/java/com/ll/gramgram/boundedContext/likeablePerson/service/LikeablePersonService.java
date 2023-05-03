@@ -10,6 +10,8 @@ import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -95,6 +97,11 @@ public class LikeablePersonService {
 
         if (actorInstaMemberId != fromInstaMemberId)
             return RsData.of("F-2", "권한이 없습니다.");
+
+        String msg = checkOverModifyTime(likeablePerson);
+        if (!msg.equals("가능합니다.")) {
+            return RsData.of("F-2", msg);
+        }
 
         return RsData.of("S-1", "삭제가능합니다.");
     }
@@ -209,7 +216,22 @@ public class LikeablePersonService {
             return RsData.of("F-2", "해당 호감표시를 취소할 권한이 없습니다.");
         }
 
+        String msg = checkOverModifyTime(likeablePerson);
+        if (!msg.equals("가능합니다.")) {
+            return RsData.of("F-2", msg);
+        }
 
         return RsData.of("S-1", "호감표시취소가 가능합니다.");
+    }
+
+    private String checkOverModifyTime(LikeablePerson likeablePerson) {
+
+        LocalDateTime boundary = ChronoUnit.HOURS.addTo(likeablePerson.getModifyUnlockDate(), 3);
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isBefore(boundary))
+            return ("변경은 %d분 후에 가능합니다."
+                    .formatted(ChronoUnit.MINUTES.between(LocalDateTime.now(), boundary)));
+        return "가능합니다.";
     }
 }
